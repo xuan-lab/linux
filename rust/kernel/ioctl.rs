@@ -3,18 +3,18 @@
 //! `ioctl()` number definitions.
 //!
 //! C header: [`include/asm-generic/ioctl.h`](srctree/include/asm-generic/ioctl.h)
+<<<<<<< HEAD
 
 #![expect(non_snake_case)]
-
 use crate::build_assert;
 
 /// Build an ioctl number, analogous to the C macro of the same name.
 #[inline(always)]
 const fn _IOC(dir: u32, ty: u32, nr: u32, size: usize) -> u32 {
-    build_assert!(dir <= uapi::_IOC_DIRMASK);
-    build_assert!(ty <= uapi::_IOC_TYPEMASK);
-    build_assert!(nr <= uapi::_IOC_NRMASK);
-    build_assert!(size <= (uapi::_IOC_SIZEMASK as usize));
+    build_assert!(dir <= uapi::_IOC_DIRMASK, "Invalid direction value");
+    build_assert!(ty <= uapi::_IOC_TYPEMASK, "Invalid type value");
+    build_assert!(nr <= uapi::_IOC_NRMASK, "Invalid number value");
+    build_assert!(size <= (uapi::_IOC_SIZEMASK as usize), "Invalid size value");
 
     (dir << uapi::_IOC_DIRSHIFT)
         | (ty << uapi::_IOC_TYPESHIFT)
@@ -70,3 +70,11 @@ pub const fn _IOC_NR(nr: u32) -> u32 {
 pub const fn _IOC_SIZE(nr: u32) -> usize {
     ((nr >> uapi::_IOC_SIZESHIFT) & uapi::_IOC_SIZEMASK) as usize
 }
+
+// Example usage
+const MY_DEVICE_TYPE: u32 = 0x1234;
+const MY_IOCTL_NUMBER: u32 = 0x01;
+
+// Creating IOCTL numbers
+const IOCTL_MY_DEVICE_READ: u32 = _IOR<MyDataType>(MY_DEVICE_TYPE, MY_IOCTL_NUMBER);
+const IOCTL_MY_DEVICE_WRITE: u32 = _IOW<MyDataType>(MY_DEVICE_TYPE, MY_IOCTL_NUMBER);
